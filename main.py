@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import matplotlib.pyplot as plt
 import io
 import base64
+import os
 
 app = Flask(__name__)
 
@@ -15,7 +16,7 @@ def run_code():
     try:
         exec_globals = {}
         exec(code, exec_globals)
-        
+
         buf = io.BytesIO()
         plt.savefig(buf, format='png')
         buf.seek(0)
@@ -25,4 +26,5 @@ def run_code():
         return jsonify({"error": str(e)})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
